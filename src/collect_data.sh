@@ -1,7 +1,7 @@
 #!/bin/bash
  
  
-for((i=3; i<10; i++)); do
+for((i=1; i<10; i++)); do
     echo "${HOSTSTEM}g0${i}"
     for((g=0; g<8; g++)); do
         cmsh -c "device; dumpmonitoringdata -6d now gpu_temperature:gpu${g} -n ${HOSTSTEM}g0${i}" > ${HOSTSTEM}g0${i}_gputemp_gpu${g}.txt
