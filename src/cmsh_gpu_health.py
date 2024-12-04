@@ -51,7 +51,7 @@ def main():
     """
 
     parser = argparse.ArgumentParser(
-                    description="This generates plots from output of `sacct`")
+                    description="Takes data extracted from cmsh (via collect_data.sh) and trolls through gpu temperatures searching for hot gpus.")
     parser.add_argument('--path', metavar='path/to/data/dir', type=str,
                         help='Path to parsable sacct file')
     args = parser.parse_args()
