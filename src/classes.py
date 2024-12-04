@@ -77,9 +77,9 @@ class Gpu :
 
         """
         fin = open(gpupath, 'r')
-        gidx = gpupath.split("_")[3]
+        gidx = gpupath.split("/")[-1]
         gidx = gidx.split(".")[0]
-        gidx = int(gidx.split("gpu")[1])
+        gidx = int(gidx.split("gpu")[-1])
         self.gidx = gidx
         self.tempL = []
         self.healthy = True
