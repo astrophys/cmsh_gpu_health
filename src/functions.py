@@ -24,6 +24,10 @@ def read_data_dir(path : str = None):
         if nodename not in nodenameL:
             nodenameL.append(nodename)
     # Only do temperature
+    if len(nodenameL) == 0:
+        raise ValueError("ERROR!! No files found")
+    else:
+        print("{} nodes found".format(len(nodenameL)))
     for nodename in nodenameL:
         gpupathL = glob.glob("{}/{}_gputemp_*".format(path,nodename))
         node = Node(gpupathL=gpupathL)
