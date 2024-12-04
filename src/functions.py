@@ -18,7 +18,7 @@ def read_data_dir(path : str = None):
     # Gather list of nodes
     nodenameL = []
     for fin in fileL:
-        if 'collect_data.sh' in fin:
+        if 'gputemp' not in fin:
             continue
         nodename = fin.split('_')[0]
         if nodename not in nodenameL:

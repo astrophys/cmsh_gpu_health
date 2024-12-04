@@ -125,7 +125,7 @@ class Node :
         for gpupath in gpupathL:
             gpu = Gpu(gpupath)
             if gpu.healthy is False :
-                print("{} : {}".format(self.name, gpu.gidx))
+                print("{} : gpu{}".format(self.name, gpu.gidx))
             self.gpuL.append(gpu)
 
 
