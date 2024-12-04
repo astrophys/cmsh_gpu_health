@@ -31,40 +31,43 @@ import pandas as pd
 from collections import OrderedDict
 
 
-class Measurable :
-    """Class that maps to a single Slurm job"""
+class Temp :
+    """Class that maps entry in a node*_gputemp_gpu*.txt"""
 
-    def __init__(self, start : int = None, end : str = None, measurable : str = None):
+    def __init__(self, line : str = None):
 
-        """Initialize Job Class
+        """Initialize Temp Class
 
         Args :
+            line = line with date and temp in node*_gputemp_gpu*.txt files
 
         Returns :
+            Temp class
 
         Raises :
+            ValueError when unexpected line format is encountered
 
         """
-        # https://stackoverflow.com/a/5166588/4021436
-        self.node = node
-        self.gpu  = gpu
-        self.user = user
-        self.reqtres = reqtres
-        # Set these PRIOR to parsing reqtres in case no GPUs were present
-        self.ngpu       = 0
-        self.gputimeraw = 0
-        self.stepL = []
-        self.externL = []
-        self.batchL = []
+        strL = line.split()
+        datestr = " ".join(strL[0:2])
+        datestr = datestr.split('.')[0]
+        self.date = datetime.datetime.strptime(datestr, "%Y/%m/%d %H:%M:%S")
+        try :
+            self.temp = float(strL[2])
+        except ValueError :
+            ## If no data, set to invalid value
+            if 'no data' in line:
+                self.temp = -1
+            else :
+                raise ValueError("ERROR!!! Parsing line = {}".format(line))
 
 
 class Gpu :
     """Class that maps to a single Slurm job"""
 
-    def __init__(self, jobid : int = None, jobname : str = None, user : str = None,
-                 reqtres : str = None):
+    def __init__(self, gpupath : str = None):
 
-        """Initialize Job Class
+        """Initialize Gpu Class
 
         Args :
 
@@ -73,22 +76,56 @@ class Gpu :
         Raises :
 
         """
+        fin = open(gpupath, 'r')
+        gidx = gpupath.split("_")[3]
+        gidx = gidx.split(".")[0]
+        gidx = int(gidx.split("gpu")[1])
+        self.gidx = gidx
+        self.tempL = []
+        self.healthy = True
+        for line in fin:
+            if line[0] == '#':
+                strL = line.split()
+                datestr = " ".join(strL[4:8])
+                datestr = datestr.split('.')[0]
+
+                # https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
+                if 'Start' in line :
+                    self.start = datetime.datetime.strptime(datestr, "%b %d %H:%M:%S %Y")
+                if 'End' in line :
+                    self.end= datetime.datetime.strptime(datestr, "%b %d %H:%M:%S %Y")
+            else :
+                temp = Temp(line)
+                if temp.temp > 75 :
+                    self.healthy = False
+                self.tempL.append(temp)
+        fin.close()
 
 
 class Node :
-    """Class that maps to a single Slurm job"""
+    """Take list of gputemp files, read in and allocate gpus"""
 
-    def __init__(self, jobid : int = None, jobname : str = None, user : str = None,
-                 reqtres : str = None):
+    def __init__(self, gpupathL : str = None):
 
-        """Initialize Job Class
+        """Initialize Node Class,
 
         Args :
+            gpuL = list of node*_gputemp_*.txt files, used to allocate Gpu class and
+                   read the data
 
         Returns :
 
         Raises :
 
         """
+        self.gpuL = []
+        name = gpupathL[0].split("/")[-1]
+        name = name.split("_")[0]
+        self.name = name
+        for gpupath in gpupathL:
+            gpu = Gpu(gpupath)
+            if gpu.healthy is False :
+                print("{} : {}".format(self.name, gpu.gidx))
+            self.gpuL.append(gpu)
 
 

@@ -1,5 +1,5 @@
 # Author : Ali Snedden
-# Date   : 11/15/24
+# Date   : 12/04/24
 # Goals (ranked by priority) :
 #
 # Refs :
@@ -31,21 +31,14 @@ import pandas as pd
 import matplotlib
 #matplotlib.use('tkagg')        # Linux
 matplotlib.use('qtagg')        # Linux
-from classes import User
 import matplotlib.pyplot as plt
-from plot_funcs import make_pie
-from plot_funcs import plot_time_series
-from functions import make_autopct
-from functions import parse_sacct_file
-from functions import is_job_in_time_range
+from functions import read_data_dir
 
 
-# Expects data like : sacct --allusers -P -S 2024-08-01 --format="jobid,jobname,user,nodelist,elapsedraw,alloccpus,cputimeraw,maxrss,state,start,end,reqtres" > sacct_2024-08-01.txt
 
-# Run via
-#    python -m pdb src/bcm_accounting_plots.py --path data/sacct_2024-05-01_to_2024-10-31.txt --start 2024-05-01T00:00:00 --end 2024-11-01T00:00:00 --plottyp time-series --users all
+
 def main():
-    """Loads the sacct .
+    """
 
     Args
 
@@ -61,18 +54,9 @@ def main():
                     description="This generates plots from output of `sacct`")
     parser.add_argument('--path', metavar='path/to/data/dir', type=str,
                         help='Path to parsable sacct file')
-    #parser.add_argument('--start', metavar='starttime', type=str,
-    #                    help='Time in YYYY-MM-DDTHH:MM:SS format')
-    #parser.add_argument('--end', metavar='endtime', type=str,
-    #                    help='Time in YYYY-MM-DDTHH:MM:SS format')
-    #parser.add_argument('--plottype', metavar='plottype', type=str,
-    #                    help='Options : "histogram", "pie" or "time-series"')
-    #parser.add_argument('--users', metavar='users', type=str,
-    #                    help='Options : "all", "total" or "someuser"')
-    #parser.add_argument('--plottype', metavar='plottype', type=str,
-    #                    help='Options : "histogram", "pie" or "time-series"')
     args = parser.parse_args()
     path = args.path
+    read_data_dir(path)
     sys.exit(0)
 
 
