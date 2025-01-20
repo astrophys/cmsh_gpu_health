@@ -56,7 +56,7 @@ class Temp :
             self.temp = float(strL[2])
         except ValueError :
             ## If no data, set to invalid value
-            if 'no data' in line:
+            if 'no data' in line.lower():
                 self.temp = -1
             else :
                 raise ValueError("ERROR!!! Parsing line = {}".format(line))
