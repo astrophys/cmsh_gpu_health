@@ -51,8 +51,8 @@ class Temp :
         strL = line.split()
         datestr = " ".join(strL[0:2])
         datestr = datestr.split('.')[0]
-        self.date = datetime.datetime.strptime(datestr, "%Y/%m/%d %H:%M:%S")
         try :
+            self.date = datetime.datetime.strptime(datestr, "%Y/%m/%d %H:%M:%S")
             self.temp = float(strL[2])
         except ValueError :
             ## If no data, set to invalid value
