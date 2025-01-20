@@ -96,7 +96,7 @@ class Gpu :
                     self.end= datetime.datetime.strptime(datestr, "%b %d %H:%M:%S %Y")
             else :
                 temp = Temp(line)
-                if temp.temp > 75 :
+                if temp.temp > 80 :
                     self.healthy = False
                 self.tempL.append(temp)
         fin.close()
